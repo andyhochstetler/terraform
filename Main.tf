@@ -1,5 +1,12 @@
 provider "azurerm" {
-  version = "2.0.0"
+  version = "2.14.0"
+
+#Authentication for my Azure subscription. Create and change to KG after testing
+client_id = "7113e233-5e62-4729-abb2-dd8d93c17829"
+client_secret = var.CLIENT_SECRET
+subscription_id = "c8410b57-3aee-4653-a685-c8a08a902609"
+tenant_id = "44708537-d2aa-4dbf-866e-56f8e706db4b"
+
   features {}
 }
 resource "azurerm_resource_group" "RG" {

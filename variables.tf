@@ -1,8 +1,27 @@
+
+variable "CLIENT_SECRET" {
+    description = "Will prompt for client secret, found in secret server"
+}
+
+vairable "client_id" {
+    type = string
+    description = "Azure Application ID"
+}
+
+vairable "subscription_id" {
+    type = string
+    description = "Azure subscription ID"
+}
+
+variable "tenant_id" {
+    type = string
+    description "Azure Directory (tenant) ID"
+}
+
 variable "location" {
     type = string
     description = "Azure DC location"
 }
-
 
 variable "RG" {
     type = string
@@ -51,3 +70,7 @@ variable "AzFunction" {
     description = "Function name"
 }
 
+variable "administrator_login"{}
+
+
+  variable "administrator_login_password"{}
