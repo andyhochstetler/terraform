@@ -3,24 +3,25 @@ variable "CLIENT_SECRET" {
     description = "Will prompt for client secret, found in secret server"
 }
 
-vairable "client_id" {
+variable "clientid" {
     type = string
     description = "Azure Application ID"
 }
 
-vairable "subscription_id" {
+variable "subscriptionid" {
     type = string
     description = "Azure subscription ID"
 }
 
-variable "tenant_id" {
+variable "tenantid" {
     type = string
-    description "Azure Directory (tenant) ID"
+    description = "Azure Directory (tenant) ID"
 }
 
 variable "location" {
     type = string
     description = "Azure DC location"
+    default = "Central US"
 }
 
 variable "RG" {
@@ -70,7 +71,32 @@ variable "AzFunction" {
     description = "Function name"
 }
 
-variable "administrator_login"{}
+variable "administrator_login"{
+    type = string
+}
 
 
-  variable "administrator_login_password"{}
+  variable "administrator_login_password"{
+      type = string
+  }
+
+
+variable "fwrule" {
+    type = string
+    description = "Firewall rule to allow Azure service to connect to DB server"
+}
+
+variable "appservice01" {
+    type = string
+    description = "App Service name"
+}
+
+variable "appservice02" {
+    type = string
+    description = "App Service name"
+}
+
+variable "appserviceplan" {
+    type = string
+    description = "App service plan name"
+}

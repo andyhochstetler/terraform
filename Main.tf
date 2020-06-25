@@ -1,11 +1,11 @@
 provider "azurerm" {
-  version = "2.14.0"
+  version = "2.15.0"
 
 #Authentication for my Azure subscription. Create and change to KG after testing
-client_id = "7113e233-5e62-4729-abb2-dd8d93c17829"
+client_id = var.clientid
 client_secret = var.CLIENT_SECRET
-subscription_id = "c8410b57-3aee-4653-a685-c8a08a902609"
-tenant_id = "44708537-d2aa-4dbf-866e-56f8e706db4b"
+subscription_id = var.subscriptionid
+tenant_id = var.tenantid
 
   features {}
 }
@@ -27,8 +27,8 @@ resource "azurerm_sql_server" "sqlserver" {
   resource_group_name          = azurerm_resource_group.RG.name
   location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
-  administrator_login          = "mradministrator"
-  administrator_login_password = "thisIsDog11"
+  administrator_login          = var.administrator_login
+  administrator_login_password = var.administrator_login_password
 
   
   tags = {
@@ -36,14 +36,61 @@ resource "azurerm_sql_server" "sqlserver" {
   }
 }
 
-/*
-data "azurerm_sql_database" "Sql_DB" {
-  name                = var.SqlDB
-  server_name         = azurerm_sql_server.sqlserver.name
+resource "azurerm_sql_firewall_rule" "main" {
+  name                = var.fwrule
   resource_group_name = azurerm_resource_group.RG.name
+  server_name         = azurerm_sql_server.sqlserver.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }
 
-output "sql_database_id" {
-  value = data.azurerm_sql_database.Sql_DB.id
+resource "azurerm_sql_database" "DB" {
+  name                = var.SqlDB
+  resource_group_name = azurerm_resource_group.RG.name
+  server_name         = azurerm_sql_server.sqlserver.name
+  location            = azurerm_resource_group.RG.location  
 }
-*/
+
+resource "azurerm_app_service_plan" "asplan" {
+  name                = var.appserviceplan
+  location            = azurerm_resource_group.RG.location
+  resource_group_name = azurerm_resource_group.RG.name
+
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }
+}
+
+resource "azurerm_function_app" "function" {
+  name                      = var.AzFunction
+  location                  = azurerm_resource_group.RG.location
+  resource_group_name       = azurerm_resource_group.RG.name
+  app_service_plan_id       = azurerm_app_service_plan.asplan.id
+  storage_account_name      = azurerm_storage_account.storageaccount.name
+  storage_account_access_key = azurerm_storage_account.storageaccount.primary_access_key
+}
+
+
+
+resource "azurerm_app_service" "appservice01" {
+  name                = var.appservice01
+  location            = azurerm_resource_group.RG.location
+  resource_group_name = azurerm_resource_group.RG.name
+  app_service_plan_id = azurerm_app_service_plan.asplan.id
+
+  site_config {
+    dotnet_framework_version = "v4.0"
+  }
+}
+
+resource "azurerm_app_service" "appservice02" {
+  name                = var.appservice02
+  location            = azurerm_resource_group.RG.location
+  resource_group_name = azurerm_resource_group.RG.name
+  app_service_plan_id = azurerm_app_service_plan.asplan.id
+
+  site_config {
+    dotnet_framework_version = "v4.0"
+  }
+}
